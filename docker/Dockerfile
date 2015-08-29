@@ -16,7 +16,6 @@ RUN apt-get update && \
     apt-get build-dep nginx-full -y && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-#ENV NGINX_VERSION 1.6.2
 ENV NGINX_VERSION 1.9.4
 
 # Nginx
@@ -72,13 +71,19 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && make -j8 && make install
 RUN mkdir -p /var/lib/nginx
 
 ADD nginx /etc/nginx/
+ADD www /home/www/
+ADD upload /var/upload/
+RUN \
+  ( cd /home;chown -R www-data: www ) && \
+  ( cd /var;chown -R www-data: upload ) && \
+  ( usermod -d /home/www www-data ) && \
+  ( usermod -s /bin/bash www-data )
 
 # Define mountable directories.
-VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/v
-ar/log/nginx", "/var/www/html"]
+VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/upload", "/home/www" ]
 
 # Define working directory.
-WORKDIR /etc/nginx
+WORKDIR /home/www
 
 # Define default command.
 CMD ["nginx"]
