@@ -12,6 +12,7 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main restricted universe\n
 
 # Install build tools for nginx
 RUN apt-get update && \
+    apt-get install cron -y && \
     apt-get install build-essential wget -y && \
     apt-get build-dep nginx-full -y && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -71,23 +72,29 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && make -j8 && make install
 RUN mkdir -p /var/lib/nginx
 
 ADD nginx /etc/nginx/
-ADD www /home/www/
 ADD upload /var/upload/
 RUN \
-  ( cd /home;chown -R www-data: www ) && \
+  ( cd /home;git clone https://github.com/users-pl/www.git;chown -R www-data: www ) && \
   ( cd /var;chown -R www-data: upload ) && \
   ( usermod -d /home/www www-data ) && \
   ( usermod -s /bin/bash www-data )
+
+RUN \
+  ( crontab -u www-data /home/www/shared/cron-entry )
 
 # Define mountable directories.
 VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/upload", "/home/www" ]
 
 # Define working directory.
 WORKDIR /home/www
+RUN \
+  chown -R www-data: /home/www 
+
 
 # Define default command.
-CMD ["nginx"]
+CMD /home/www/start-services
 
 # Expose ports.
 EXPOSE 80
 EXPOSE 443
+EXPOSE 3000
