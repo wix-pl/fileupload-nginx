@@ -76,9 +76,6 @@ ADD upload /var/upload/
 RUN \
   ( cd /var;chown -R www-data: upload )
 
-RUN \
-  ( crontab -u www-data /home/www/shared/cron-entry )
-
 # Define mountable directories.
 VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/upload", "/home/www" ]
 
@@ -88,6 +85,7 @@ RUN \
   chown -R www-data: /home/www 
 
 ADD root/start-services /start-services
+ADD root/get-meteor /get-meteor
 
 # Define default command.
 CMD /start-services
