@@ -6,6 +6,7 @@ etc/nginx/conf.d", "/var/log/nginx", "/var/upload", "/home/www" ]
 
 
 ```
+mkdir `pwd`/log `pwd`/upload 
 docker run --name webserver -d \
   -v `pwd`/log:/var/log/nginx \
   -v `pwd`/upload:/var/upload \
