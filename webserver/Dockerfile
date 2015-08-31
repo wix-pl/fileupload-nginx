@@ -74,10 +74,7 @@ RUN mkdir -p /var/lib/nginx
 ADD nginx /etc/nginx/
 ADD upload /var/upload/
 RUN \
-  ( cd /home;git clone https://github.com/users-pl/www.git;chown -R www-data: www ) && \
-  ( cd /var;chown -R www-data: upload ) && \
-  ( usermod -d /home/www www-data ) && \
-  ( usermod -s /bin/bash www-data )
+  ( cd /var;chown -R www-data: upload )
 
 RUN \
   ( crontab -u www-data /home/www/shared/cron-entry )
@@ -90,9 +87,10 @@ WORKDIR /home/www
 RUN \
   chown -R www-data: /home/www 
 
+ADD root/start-services /start-services
 
 # Define default command.
-CMD /home/www/start-services
+CMD /start-services
 
 # Expose ports.
 EXPOSE 80

@@ -1,0 +1,10 @@
+echo $APP > /APP
+
+( cd /home;git clone https://github.com/users-pl/www.git www) && \
+( cd /home;chown -R www-data: www ) && \
+( usermod -d /home/www www-data ) && \
+( usermod -s /bin/bash www-data ) && \
+( crontab -u www-data /home/www/shared/cron-entry ) && \
+( /usr/sbin/cron -f ) && \
+
+/usr/sbin/nginx
