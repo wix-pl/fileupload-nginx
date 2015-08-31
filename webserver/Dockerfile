@@ -87,6 +87,8 @@ RUN \
 ADD root/start-services /start-services
 ADD root/get-meteor /get-meteor
 
+RUN chmod 755 /get-meteor
+
 # Define default command.
 CMD /start-services
 
