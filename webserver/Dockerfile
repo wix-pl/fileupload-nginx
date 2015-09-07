@@ -1,5 +1,5 @@
-FROM pointlook/ubuntu
-MAINTAINER admin@pointlook.com
+FROM 2beesadmin/ubuntu
+MAINTAINER admin@2bees.com
 
 # Set the env variable DEBIAN_FRONTEND to noninteractive
 ENV DEBIAN_FRONTEND noninteractive
